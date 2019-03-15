@@ -7,35 +7,45 @@ require(CLIENTINC_DIR.'header.inc.php');
 <hr>
 <?php 
 
-define('DBHOST','localhost');
-define('DBNAME','osticket');
-define('DBUSER','osticket');
-define('DBPASS','918611984Ost');
+// define('DBHOST','localhost');
+// define('DBNAME','osticket');
+// define('DBUSER','osticket');
+// define('DBPASS','918611984Ost');
 
 mysqli_set_charset( $link = mysqli_connect( DBHOST, DBUSER, DBPASS, DBNAME ), "utf8" );
-
 if ( !$link )  die("Error MySQL");
 
-$result  =  mysqli_query( $link,  "SELECT * FROM newsfeed ORDER BY id DESC LIMIT 20" );
-
-if ( !$result ) echo "Произошла ошибка запроса MySQL: "  .  mysqli_error();
-
-while ( $str = mysqli_fetch_array($result) ) {
-    $newsfeed[] = $str;
-}
-
-foreach ($newsfeed as $news) {
-?>
+if($id = $_GET['id']) {
+ 
+    $news = mysqli_fetch_array(mysqli_query( $link,  "SELECT * FROM newsfeed WHERE id=$id" )); ?>
 
     <h3><?php echo $news['name']; ?></h3>
     <p><?php echo $news['body']; ?></p>
-    <p><i><?php echo $news['date']; ?>, <?php echo $news['topicstarter']; ?></i></p><br>
+    <p><i><?php echo $news['date']; ?>, <?php echo $news['topicstarter']; ?></i></p>
+    <p><a href="/newsfeed.php">К списку новостей</a></p>
 
 <?php 
 }
+else {
 
-mysqli_close($link); 
+    if ( !$result  =  mysqli_query( $link,  "SELECT * FROM newsfeed ORDER BY id DESC LIMIT 20" ) ) {
+        echo "Произошла ошибка запроса MySQL: "  .  mysqli_error();
+    }
+
+    while ( $str = mysqli_fetch_array($result) ) {
+        $newsfeed[] = $str;
+    }
+
+    foreach ($newsfeed as $news) {
 ?>
+
+    <h3><?php echo $news['name']; ?></h3>
+    <p><?php echo $news['shortbody']; ?></p>
+    <p><a href="/newsfeed.php?id=<?php echo $news['id']; ?>">Читать дальше...</a></p>
+    <p><i><?php echo $news['date']; ?>, <?php echo $news['topicstarter']; ?></i></p><br>
+
+<?php } } ?>
+
 <hr>
 <div class="clear"></div>
 
