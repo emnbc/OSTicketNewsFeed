@@ -14,6 +14,7 @@ class Newsfeed {
     }
 
     function getNewsfeed($quantity) {
+        
         $newsfeed = array();
 
         mysqli_set_charset($link = mysqli_connect( DBHOST, DBUSER, DBPASS, DBNAME ), "utf8");
@@ -31,13 +32,31 @@ class Newsfeed {
         return $newsfeed;
     }
 
-    function addNews($title, $shortnews, $news, $author) {
+    function addNews($_title, $_shortnews, $_news, $_author) {
 
         mysqli_set_charset($link = mysqli_connect( DBHOST, DBUSER, DBPASS, DBNAME ), "utf8");
+
+        $title = mysqli_real_escape_string($link, $_title);
+        $shortnews = mysqli_real_escape_string($link, $_shortnews);
+        $news = mysqli_real_escape_string($link, $_news);
+        $author = mysqli_real_escape_string($link, $_author);
 
         $date = date("d.m.Y H:i:s");
 
         $sql = "INSERT INTO newsfeed (id, important, date, title, author, shortnews, news) VALUES ('', '', '" . $date . "', '" . $title . "', '" . $author . "', '" . $shortnews . "', '" . $news . "')";
+
+        if(!$result  =  mysqli_query($link, $sql)) {
+            echo "Произошла ошибка запроса MySQL: "  .  mysqli_error();
+        }
+
+    }
+
+    function removeNews($_rem) {
+        mysqli_set_charset($link = mysqli_connect( DBHOST, DBUSER, DBPASS, DBNAME ), "utf8");
+
+        $rem = mysqli_real_escape_string($link, $_rem);
+
+        $sql = "DELETE FROM newsfeed WHERE id = '".$rem."'";
 
         if(!$result  =  mysqli_query($link, $sql)) {
             echo "Произошла ошибка запроса MySQL: "  .  mysqli_error();

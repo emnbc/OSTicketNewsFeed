@@ -1,8 +1,8 @@
-<?php
+<?php 
 require('staff.inc.php');
 require_once(INCLUDE_DIR.'class.faq.php');
 require_once(INCLUDE_DIR.'class.newsfeed.php');
-require_once(STAFFINC_DIR.'header.inc.php');
+require_once(STAFFINC_DIR.'header.inc.php'); 
 ?>
 
 <div class="newsfeed-staff">
@@ -12,10 +12,30 @@ require_once(STAFFINC_DIR.'header.inc.php');
 if(!empty($_POST['nftoken'])) {
     if(!empty($_POST['nftitle']) && !empty($_POST['nfshortnews']) && !empty($_POST['nfnews'])) {
         Newsfeed::addNews($_POST['nftitle'], $_POST['nfshortnews'], $_POST['nfnews'], $thisstaff->getFirstName());
+        echo '<p class="nf-alert-green">Success!</p>';
     }
     else {
-        echo '<p class="nf-alert">You must complete all fields</p>';
+        echo '<p class="nf-alert-red">You must complete all fields.</p>';
     }
+}
+
+if(!empty($rem = $_GET['rem'])) {
+    $news = Newsfeed::getNews($rem);
+    ?>
+    <form action="newsfeed.php" method="post">
+        <p class="nf-alert-red">   
+            Вы действительно хотите удалить запись "<?php echo $news['title']; ?>"?
+                <?php csrf_token(); ?>
+                <input type="hidden" name="nfdelete" value="<?php echo $rem; ?>">
+                <input type="submit" value="Удалить"> 
+                <input type="button" value="Отмена" onclick="location.href='newsfeed.php'">
+        </p>
+    </form>
+    <?php 
+}
+
+if(!empty($_POST['nfdelete']) && (int)$_POST['nfdelete'] > 0) {
+    Newsfeed::removeNews($_POST['nfdelete']);
 }
 
 ?>
@@ -62,7 +82,7 @@ foreach($newsfeed as $news) { ?>
 
     <h4><?php echo $news['title']; ?></h4>
     <p><?php echo $news['shortnews']; ?></p>
-    <p><i><?php echo $news['date']; ?>, <?php echo $news['author']; ?></i> - <a href="#">[Редактировать]</a> <a style="color: red" href="#">[Удалить]</a></p>
+    <p><i><?php echo $news['date']; ?>, <?php echo $news['author']; ?></i> - <a href="#">[Редактировать]</a> <a style="color: red" href="newsfeed.php?rem=<?php echo $news['id']; ?>">[Удалить]</a></p>
 
 <?php  
 } ?>
