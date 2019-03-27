@@ -3,7 +3,7 @@ require('client.inc.php');
 require(CLIENTINC_DIR.'header.inc.php'); 
 require_once(INCLUDE_DIR.'class.newsfeed.php');
 ?>
-
+<div class="newsfeed-client">
 <h1>Новости</h1>
 <hr>
 <?php 
@@ -20,7 +20,62 @@ if(!empty($id = $_GET['id'])) {
     <p><i><?php echo $news['date']; ?>, <?php echo $news['author']; ?></i></p>
     <p><a href="/newsfeed.php">К списку новостей</a></p>
 
+    <hr>
+
 <?php 
+
+    $comments = Newsfeed::getNewsComments($id, 30);
+
+    echo '<h3>Комментарии:</h3><br>';
+
+    if(!empty($comments)) {
+        foreach($comments as $comment) { 
+?>
+        <div class="comment">
+            <h4><?php echo $comment['author']; ?></h4>
+            <div class="comment-body"><?php echo $comment['comment']; ?></div>
+            <p><i><?php echo $comment['date']; ?></i></p>
+        </div>
+<?php 
+        }
+    }
+    else {
+        echo '<div class="comment">(Комментариев пока нет)</div>';
+    }
+?>
+
+    <hr>
+    <h3>Добавить комментарий:</h3><br>
+
+<?php if ($thisclient && is_object($thisclient) && $thisclient->isValid() && !$thisclient->isGuest()) { ?>
+
+<form action="" method="post">
+<?php csrf_token(); ?>
+<input type="hidden" name="nftoken" value="true">
+    <table width="940" cellspacing="0" cellpadding="0" border="0">
+       <tbody>
+            <tr>
+                <td>От: <strong><?php echo $thisclient->getName(); ?></strong></td>
+           </tr>
+           <tr>
+                <td>
+                    <textarea cols="21" rows="8" name="nfcomment"></textarea>
+               </td>
+           </tr>
+           <tr>
+                <td valign="top" class="required"><br /><input type="submit" value="Добавить"></td>
+           </tr>
+        </tbody>
+   </table>
+</form>
+
+<?php 
+    }
+    
+    else {
+        echo '(Чтобы оставить комментарий, нужно войти)';
+    }
+
 }
 else {
 
@@ -38,6 +93,7 @@ else {
 
 <hr>
 
+</div>
 <div class="clear"></div>
 
 <?php require(CLIENTINC_DIR.'footer.inc.php'); ?>

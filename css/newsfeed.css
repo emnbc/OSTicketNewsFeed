@@ -13,11 +13,17 @@
     border:1px solid #aaa;
 }
 
-.newsfeed-staff td {
+.newsfeed-client textarea {
+    width: 900px;
+    background:#fff;
+    border:1px solid #aaa;
+}
+
+.newsfeed-staff td, .newsfeed-client td {
     padding-bottom: 10px;
 }
 
-.newsfeed-staff .required {
+.newsfeed-staff .required, .newsfeed-client .required {
     width: 160px;
 }
 
@@ -39,4 +45,12 @@
     color: #155724;
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
+}
+
+.newsfeed-client .comment {
+    margin: 0 0 20px 20px;
+}
+
+.newsfeed-client .comment-body {
+    margin: 8px 0;
 }

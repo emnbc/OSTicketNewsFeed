@@ -25,10 +25,10 @@ if(!empty($rem = $_GET['rem'])) {
     <form action="newsfeed.php" method="post">
         <p class="nf-alert-red">   
             Вы действительно хотите удалить запись "<?php echo $news['title']; ?>"?
-                <?php csrf_token(); ?>
-                <input type="hidden" name="nfdelete" value="<?php echo $rem; ?>">
-                <input type="submit" value="Удалить"> 
-                <input type="button" value="Отмена" onclick="location.href='newsfeed.php'">
+            <?php csrf_token(); ?>
+            <input type="hidden" name="nfdelete" value="<?php echo $rem; ?>">
+            <input type="submit" value="Удалить"> 
+            <input type="button" value="Отмена" onclick="location.href='newsfeed.php'">
         </p>
     </form>
     <?php 
