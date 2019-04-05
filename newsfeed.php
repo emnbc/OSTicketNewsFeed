@@ -24,9 +24,19 @@ if(!empty($id = $_GET['id'])) {
 
 <?php 
 
-    $comments = Newsfeed::getNewsComments($id, 30);
-
     echo '<h3>Комментарии:</h3><br>';
+
+    if(!empty($_POST['nftoken'])) {
+        if(!empty($_POST['nfcomment'])) {
+            Newsfeed::addComment($id, $thisclient->getName(), $_POST['nfcomment']);
+            echo '<p class="nf-alert-green">Success!</p>';
+        }
+        else {
+            echo '<p class="nf-alert-red">You must complete all fields.</p>';
+        }
+    } 
+
+    $comments = Newsfeed::getNewsComments($id, 30);
 
     if(!empty($comments)) {
         foreach($comments as $comment) { 
@@ -47,7 +57,9 @@ if(!empty($id = $_GET['id'])) {
     <hr>
     <h3>Добавить комментарий:</h3><br>
 
-<?php if ($thisclient && is_object($thisclient) && $thisclient->isValid() && !$thisclient->isGuest()) { ?>
+<?php if ($thisclient && is_object($thisclient) && $thisclient->isValid() && !$thisclient->isGuest()) {
+
+?>
 
 <form action="" method="post">
 <?php csrf_token(); ?>
